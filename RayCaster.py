@@ -144,6 +144,7 @@ pygame.init()
 #Set de tamaño de la pantalla
 screen = pygame.display.set_mode((1000,500), pygame.DOUBLEBUF | pygame.HWACCEL) #, pygame.FULLSCREEN)
 screen.set_alpha(None)
+pygame.display.set_caption('Tutorial 1')
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Arial", 30)
 
@@ -189,6 +190,11 @@ while isRunning:
                 r.player['angle'] -= 5
             elif ev.key == pygame.K_e:
                 r.player['angle'] += 5
+            """if ev.key == pygame.K_f:
+                if screen.get_flags() and pygame.FULLSCREEN:
+                    pygame.display.set_mode((1000, 500))
+                else:
+                    pygame.display.set_mode((1000, 500),  pygame.DOUBLEBUF|pygame.HWACCEL|pygame.FULLSCREEN)"""
 
 
             i = int(newX / r.blocksize)
