@@ -16,6 +16,7 @@ BLACK = (0,0,0)
 WHITE = (255,255,255)
 BACKGROUND = (62,3,4)
 
+
 #textures for blocks
 textures = {
     '1' : pygame.image.load('block1.png'),
@@ -25,7 +26,7 @@ textures = {
     '5' : pygame.image.load('block3.png')
     }
 
-background=pygame.image.load('bg3.jpg')
+background=pygame.image.load('bg5.jpg')
 
 class Raycaster(object):
     def __init__(self,screen):
@@ -202,7 +203,7 @@ class GameState(Enum):
 def main():
     pygame.init()
 
-    screen = pygame.display.set_mode((800, 600))
+    screen = pygame.display.set_mode((1000,500))
     game_state = GameState.TITLE
 
     while True:
@@ -218,14 +219,14 @@ def main():
 
 def title_screen(screen):
     game_btn = UIElement(
-        center_position=(400, 300),
+        center_position=(500, 200),
         font_size=50,
         bg_rgb=BLUE,
         text_rgb=WHITE,
         text="MARIO",
     )
     start_btn = UIElement(
-        center_position=(400, 400),
+        center_position=(500, 300),
         font_size=30,
         bg_rgb=BLUE,
         text_rgb=WHITE,
@@ -233,7 +234,7 @@ def title_screen(screen):
         action=GameState.NEWGAME,
     )
     quit_btn = UIElement(
-        center_position=(400, 500),
+        center_position=(500, 400),
         font_size=30,
         bg_rgb=BLUE,
         text_rgb=WHITE,
@@ -249,8 +250,8 @@ def title_screen(screen):
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        screen.fill(BLUE)
-        screen.blit(background, (0,25))
+        #screen.fill(BLUE)
+        screen.blit(background, (-600,-550))
 
         
         for button in buttons:
@@ -264,7 +265,7 @@ def title_screen(screen):
 def play_level(screen):
     
     return_btn = UIElement(
-        center_position=(140, 570),
+        center_position=(140, 300),
         font_size=20,
         bg_rgb=BLUE,
         text_rgb=WHITE,
@@ -275,7 +276,7 @@ def play_level(screen):
     #Set de tamaño de la pantalla
     screen = pygame.display.set_mode((1000,500), pygame.DOUBLEBUF | pygame.HWACCEL) #, pygame.FULLSCREEN)
     screen.set_alpha(None)
-    pygame.display.set_caption('Tutorial 1')
+    pygame.display.set_caption('Laboratorio3')
     clock = pygame.time.Clock()
     font = pygame.font.SysFont("Arial", 30)
 
@@ -291,22 +292,21 @@ def play_level(screen):
     r.load_map('map.txt')
 
     isRunning = True
-
+    #return_btn.draw(screen)
     while isRunning:
-
+        mouse_up=False
+        return_btn.draw(screen)
         for ev in pygame.event.get():
+            
             if ev.type == pygame.QUIT:
                 isRunning = False
-            if ev.type == pygame.MOUSEBUTTONUP and event.button == 1:
+            if ev.type == pygame.MOUSEBUTTONUP and ev.button == 1:
                 mouse_up = True
-            else:
-                mouse_up = False
 
             ui_action = return_btn.update(pygame.mouse.get_pos(), mouse_up)
             if ui_action is not None:
                 return ui_action
-            return_btn.draw(screen)
-
+            
             pygame.display.flip()
             #to substitute below values
             newX = r.player['x']
