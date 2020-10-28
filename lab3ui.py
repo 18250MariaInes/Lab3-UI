@@ -5,7 +5,7 @@ from pygame.rect import Rect
 from enum import Enum
 from math import cos, sin, pi
 
-BLUE = (106, 159, 181)
+BLUE = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 
@@ -24,6 +24,8 @@ textures = {
     '4' : pygame.image.load('block4.png'),
     '5' : pygame.image.load('block3.png')
     }
+
+background=pygame.image.load('bg3.jpg')
 
 class Raycaster(object):
     def __init__(self,screen):
@@ -146,15 +148,7 @@ class UIElement(Sprite):
     """ An user interface element that can be added to a surface """
 
     def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
-        """
-        Args:
-            center_position - tuple (x, y)
-            text - string of text to write
-            font_size - int
-            bg_rgb (background colour) - tuple (r, g, b)
-            text_rgb (text colour) - tuple (r, g, b)
-        """
-        super().__init__()
+        
         
         self.mouse_over = False  # indicates if the mouse is over the element
 
@@ -178,7 +172,7 @@ class UIElement(Sprite):
         self.action = action
 
         # calls the init method of the parent sprite class
-        #super().__init__()
+        super().__init__()
 
     @property
     def image(self):
@@ -223,12 +217,12 @@ def main():
             return
 
 def title_screen(screen):
-    uielement = UIElement(
-        center_position=(400, 700),
-        font_size=60,
+    game_btn = UIElement(
+        center_position=(400, 300),
+        font_size=50,
         bg_rgb=BLUE,
         text_rgb=WHITE,
-        text="Hello World"
+        text="MARIO",
     )
     start_btn = UIElement(
         center_position=(400, 400),
@@ -247,16 +241,18 @@ def title_screen(screen):
         action=GameState.QUIT,
     )
 
-    buttons = [start_btn, quit_btn, uielement]
+    buttons = [start_btn, quit_btn, game_btn]
 
     while True:
-        uielement.draw(screen)
+        #uielement.draw(screen)
         mouse_up = False
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
         screen.fill(BLUE)
+        screen.blit(background, (0,25))
 
+        
         for button in buttons:
             ui_action = button.update(pygame.mouse.get_pos(), mouse_up)
             if ui_action is not None:
