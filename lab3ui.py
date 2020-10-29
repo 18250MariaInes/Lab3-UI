@@ -141,7 +141,7 @@ class Raycaster(object):
 #function used by my UIElement to set characteristics of my titles and font           
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     """ Returns surface with text written on """
-    font = pygame.freetype.SysFont("Courier", font_size, bold=True)
+    font = pygame.freetype.SysFont("Arial", font_size, bold=True)
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
 
@@ -228,7 +228,7 @@ def title_screen(screen):
         font_size=50,
         bg_rgb=BLACK,
         text_rgb=WHITE,
-        text="MARIO",
+        text="SUPER MARIO BROS",
     )
     #start button
     start_btn = UIElement(
@@ -258,7 +258,7 @@ def title_screen(screen):
                 mouse_up = True
         #imagen for main screen
         screen.blit(background, (-600,-550))
-        screen.blit(mario, (600,200))
+        screen.blit(mario, (600,250))
 
         
         for button in buttons:
