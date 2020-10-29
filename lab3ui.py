@@ -5,13 +5,7 @@ from pygame.rect import Rect
 from enum import Enum
 from math import cos, sin, pi
 
-BLUE = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
-
-#--------------------aqui empece a pegar
-
-
+#colors for the game
 BLACK = (0,0,0)
 WHITE = (255,255,255)
 BACKGROUND = (62,3,4)
@@ -26,8 +20,13 @@ textures = {
     '5' : pygame.image.load('block3.png')
     }
 
+#background and other images
 background=pygame.image.load('bg5.jpg')
+mario=pygame.image.load('mario.png')
+#set size of mario
+mario = pygame.transform.scale(mario, (150, 150))
 
+#class raycaster for the game itself
 class Raycaster(object):
     def __init__(self,screen):
         self.screen = screen
@@ -138,27 +137,28 @@ class Raycaster(object):
             self.screen.set_at( (halfWidth, i), BLACK)
             self.screen.set_at( (halfWidth+1, i), BLACK)
             self.screen.set_at( (halfWidth-1, i), BLACK)
-            
+
+#function used by my UIElement to set characteristics of my titles and font           
 def create_surface_with_text(text, font_size, text_rgb, bg_rgb):
     """ Returns surface with text written on """
     font = pygame.freetype.SysFont("Courier", font_size, bold=True)
     surface, _ = font.render(text=text, fgcolor=text_rgb, bgcolor=bg_rgb)
     return surface.convert_alpha()
 
+#class for my titles and buttons
 class UIElement(Sprite):
-    """ An user interface element that can be added to a surface """
 
     def __init__(self, center_position, text, font_size, bg_rgb, text_rgb, action=None):
         
         
-        self.mouse_over = False  # indicates if the mouse is over the element
+        self.mouse_over = False  # true if the mouse over the text
 
-        # create the default image
+        # create the default title, normal size
         default_image = create_surface_with_text(
             text=text, font_size=font_size, text_rgb=text_rgb, bg_rgb=bg_rgb
         )
 
-        # create the image that shows when mouse is over the element
+        # creates title 1.2 time bigger when mouse over it
         highlighted_image = create_surface_with_text(
             text=text, font_size=font_size * 1.2, text_rgb=text_rgb, bg_rgb=bg_rgb
         )
@@ -170,7 +170,7 @@ class UIElement(Sprite):
             highlighted_image.get_rect(center=center_position),
         ]
 
-        self.action = action
+        self.action = action #the actions called when clicked
 
         # calls the init method of the parent sprite class
         super().__init__()
@@ -183,6 +183,7 @@ class UIElement(Sprite):
     def rect(self):
         return self.rects[1] if self.mouse_over else self.rects[0]
 
+    #can tell if mouse is over or clicked
     def update(self, mouse_pos, mouse_up):
         if self.rect.collidepoint(mouse_pos):
             self.mouse_over = True
@@ -192,14 +193,16 @@ class UIElement(Sprite):
             self.mouse_over = False
 
     def draw(self, surface):
-        """ Draws element onto a surface """
+        # title into screen 
         surface.blit(self.image, self.rect)
 
+#class that keeps control of the state of the game
 class GameState(Enum):
     QUIT = -1
     TITLE = 0
     NEWGAME = 1
 
+#main that directs to different screens of my game
 def main():
     pygame.init()
 
@@ -207,36 +210,40 @@ def main():
     game_state = GameState.TITLE
 
     while True:
+        #title screen
         if game_state == GameState.TITLE:
             game_state = title_screen(screen)
-
+        #game screen
         if game_state == GameState.NEWGAME:
             game_state = play_level(screen)
-
+        #quitting
         if game_state == GameState.QUIT:
             pygame.quit()
             return
 
 def title_screen(screen):
+    #title
     game_btn = UIElement(
         center_position=(500, 200),
         font_size=50,
-        bg_rgb=BLUE,
+        bg_rgb=BLACK,
         text_rgb=WHITE,
         text="MARIO",
     )
+    #start button
     start_btn = UIElement(
         center_position=(500, 300),
         font_size=30,
-        bg_rgb=BLUE,
+        bg_rgb=BLACK,
         text_rgb=WHITE,
         text="Start",
         action=GameState.NEWGAME,
     )
+    #quit button
     quit_btn = UIElement(
         center_position=(500, 400),
         font_size=30,
-        bg_rgb=BLUE,
+        bg_rgb=BLACK,
         text_rgb=WHITE,
         text="Quit",
         action=GameState.QUIT,
@@ -245,13 +252,13 @@ def title_screen(screen):
     buttons = [start_btn, quit_btn, game_btn]
 
     while True:
-        #uielement.draw(screen)
         mouse_up = False
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
                 mouse_up = True
-        #screen.fill(BLUE)
+        #imagen for main screen
         screen.blit(background, (-600,-550))
+        screen.blit(mario, (600,200))
 
         
         for button in buttons:
@@ -262,14 +269,15 @@ def title_screen(screen):
 
         pygame.display.flip()
 
+#function called when starting a game
 def play_level(screen):
     
     return_btn = UIElement(
-        center_position=(140, 300),
+        center_position=(870, 450),
         font_size=20,
-        bg_rgb=BLUE,
+        bg_rgb=BLACK,
         text_rgb=WHITE,
-        text="Return to main menu",
+        text="Back to main menu",
         action=GameState.TITLE,
     )
     pygame.init()
@@ -332,11 +340,6 @@ def play_level(screen):
                     r.player['angle'] -= 5
                 elif ev.key == pygame.K_e:
                     r.player['angle'] += 5
-                """if ev.key == pygame.K_f:
-                    if screen.get_flags() and pygame.FULLSCREEN:
-                        pygame.display.set_mode((1000, 500))
-                    else:
-                        pygame.display.set_mode((1000, 500),  pygame.DOUBLEBUF|pygame.HWACCEL|pygame.FULLSCREEN)"""
 
 
                 i = int(newX / r.blocksize)
@@ -364,29 +367,6 @@ def play_level(screen):
         pygame.display.update()
     
     pygame.quit()
-    #action=GameState.QUIT
-    """return_btn = UIElement(
-        center_position=(140, 570),
-        font_size=20,
-        bg_rgb=BLUE,
-        text_rgb=WHITE,
-        text="Return to main menu",
-        action=GameState.TITLE,
-    )
-
-    while True:
-        mouse_up = False
-        for event in pygame.event.get():
-            if event.type == pygame.MOUSEBUTTONUP and event.button == 1:
-                mouse_up = True
-        screen.fill(BLUE)
-
-        ui_action = return_btn.update(pygame.mouse.get_pos(), mouse_up)
-        if ui_action is not None:
-            return ui_action
-        return_btn.draw(screen)
-
-        pygame.display.flip()"""
 
 # call main when the script is run
 if __name__ == "__main__":
